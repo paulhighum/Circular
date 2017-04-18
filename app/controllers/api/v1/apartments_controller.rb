@@ -15,25 +15,24 @@ class Api::V1::ApartmentsController < ApplicationController
   end
 
   def create
-    # binding.pry
-    @apartment = Apartment.find_by("street_address": apartment_params)
+    @apartment = Apartment.find_or_create_by("street_address": apartment_params['street_address'])
       if @apartment
         render :js => "window.location = '#{apartment_path(@apartment.id)}'"
       else
         render status: 404
       end
 
-    apartment = Apartment.new(apartment_params)
-    if apartment.save
-      render json: apartment
-    else
-      render :json => { :errors => apartment.errors.full_messages }, :status => 422
-    end
+    # apartment = Apartment.new(apartment_params)
+    # if apartment.save
+    #   render json: apartment
+    # else
+    #   render :json => { :errors => apartment.errors.full_messages }, :status => 422
+    # end
   end
 
   private
 
   def apartment_params
-    params.permit(:address)
+    params.permit(:street_address)
   end
 end

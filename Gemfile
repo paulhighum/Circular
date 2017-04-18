@@ -28,6 +28,7 @@ gem "omniauth-google-oauth2", "~> 0.2.1"
 gem 'figaro'
 gem 'gmaps4rails'
 gem 'omniauth-facebook'
+gem 'responders'
 
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
@@ -44,6 +45,7 @@ group :development, :test do
   gem 'selenium-webdriver', '~> 2.53.4'
   gem 'factory_girl_rails', '~> 4.0'
   gem 'faker'
+  gem 'pry'
 end
 
 group :development do
