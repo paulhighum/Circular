@@ -23,13 +23,13 @@
       <div class="panel-body new-link-section">
 
 
-    <%= form_tag do %>
-    <div class="input-group">
-      <%= text_field_tag(:apartment, :street_address, value: nil, class: 'form-control', placeholder: 'Street Address') %>
-    <span class="input-group-btn">
-      <%= button_tag "Submit", class: "btn btn-primary", id: 'address_search'%></span>
-    </div>
-    <% end %>
+
+        <!--< %  = form_for(@apartment, remote: true) do |f| %>-->
+            <!--< % = f.text_field :street_address, id: 'street-address' %>-->
+          <!--< % = f.submit 'Add my address', class: 'submit-address' %>-->
+        <!--< % end %>-->
+        <input type="text" name="street-address" id="street-address">
+        <button type="submit" class="submit-address">Add</button>
   </div>
 </div>
 
