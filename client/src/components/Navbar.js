@@ -1,11 +1,29 @@
 import React from 'react';
+import styled from 'styled-components';
 import { Link } from 'react-router';
 
+import Container from './Styled/Container';
+import colors from './Styled/colors';
+
+const StyledNavBar = styled.nav`
+  height: 5rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  .home-link {
+    color: ${colors.mainGreen};
+    font-size: 2rem;
+    font-family: 'Fira Sans Condensed', sans-serif;
+    font-weight: 700;
+    text-decoration: none;
+  }
+`;
+
 const NavBar = () => (
-  <nav className="navbar">
-    <div className="container">
+  <StyledNavBar>
+    <Container>
       <div className="row">
-        <div className="col-md-9 navbar-header">
+        <div className="col-md-9">
           <p>
             <Link className="home-link" to="/">Recycling Request Tool</Link>
           </p>
@@ -18,8 +36,8 @@ const NavBar = () => (
           </ul>
         </div>
       </div>
-    </div>
-  </nav>
+    </Container>
+  </StyledNavBar>
 );
 
 export default NavBar;
