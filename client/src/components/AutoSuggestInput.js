@@ -1,32 +1,26 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import PlacesAutocomplete, { geocodeByAddress, getLatLng } from 'react-places-autocomplete';
 import scriptLoader from 'react-async-script-loader';
 
-import { fetchApartmentMatchesRequest } from '../actions/apartments';
+import {
+  searchAddressFlow,
+  clearSearchResults
+} from '../redux/actions/initialSearch';
 
 class AutoSuggestInput extends Component {
   constructor(props) {
     super(props);
     this.state = {
       address: '',
-      isGoogleReady: false,
-      googleApiError: false,
       isFieldActive: false
     };
-    this.onChange = address => this.setState({ address, googleApiError: false });
+    this.onChange = address => this.setState({ address });
   }
 
   handleSelect(address) {
-    this.setState({ address });
-    geocodeByAddress(this.state.address)
-      .then(results => getLatLng(results[0]))
-      .then((latLng) => {
-        console.log('Success!', latLng);
-        // this.props.fetchApartmentMatchesRequest(latLng)
-        this.setState({ googleApiError: false });
-      })
-      .catch(error => this.setState({ googleApiError: error }));
+    this.props.searchAddressFlow(address, geocodeByAddress, getLatLng);
   }
 
   handleSearchClick(e) {
@@ -39,6 +33,7 @@ class AutoSuggestInput extends Component {
   clearInput(e) {
     e.preventDefault();
     this.setState({ address: '' });
+    this.props.clearSearchResults();
     this.addressInput.focus();
   }
 
@@ -57,7 +52,7 @@ class AutoSuggestInput extends Component {
       </div>);
 
     const inputProps = {
-      ref: input => this.addressInput = input,
+      ref: (input) => { this.addressInput = input; },
       type: 'text',
       value: this.state.address,
       onChange: this.onChange,
@@ -67,13 +62,10 @@ class AutoSuggestInput extends Component {
 
     return (
       <div className="autosuggest_input_form">
-        { this.state.googleApiError &&
-        <p style={{ color: 'red' }}> Sorry, we're having trouble finding that address </p>}
         <div className="input_form">
           { this.props.isScriptLoaded ?
             <PlacesAutocomplete
               autocompleteItem={AutocompleteItem}
-              highlightFirstSuggestion
               classNames={cssClasses}
               inputProps={inputProps}
               onSelect={address => this.handleSelect(address)}
@@ -88,7 +80,7 @@ class AutoSuggestInput extends Component {
             >
               <i className="fa fa-times fa-2x" aria-hidden="true" />
             </button>
-	  			}
+          }
           <button
             className="search_button"
             disabled={!this.state.address}
@@ -102,5 +94,14 @@ class AutoSuggestInput extends Component {
   }
 }
 
+AutoSuggestInput.propTypes = {
+  searchAddressFlow: PropTypes.func.isRequired,
+  clearSearchResults: PropTypes.func.isRequired,
+  isScriptLoaded: PropTypes.bool.isRequired
+};
+
 export default connect(
-  ({ apartmentMatches }) => ({ apartmentMatches }), { fetchApartmentMatchesRequest })(scriptLoader(`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}&libraries=places`)(AutoSuggestInput));
+  ({ initialSearch }) => ({ initialSearch }), {
+    searchAddressFlow,
+    clearSearchResults
+  })(scriptLoader(`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_KEY}&libraries=places`)(AutoSuggestInput));

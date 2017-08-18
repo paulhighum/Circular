@@ -1,30 +1,20 @@
 import React from 'react';
 import { render } from 'react-dom';
-import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
-import createSagaMiddleware from 'redux-saga';
-
-import rootReducer from './reducers';
-import IndexSagas from './sagas';
-
-import App from './containers/App';
+import { browserHistory, Router } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
+import routes from './routes';
 import registerServiceWorker from './registerServiceWorker';
 import './stylesheets/main.css';
 
-const sagaMiddleware = createSagaMiddleware();
-
-const configureStore = () => createStore(
-  rootReducer,
-  compose(applyMiddleware(sagaMiddleware))
-);
+import configureStore from './redux/configureStore';
 
 const store = configureStore();
-
-sagaMiddleware.run(IndexSagas);
+const history = syncHistoryWithStore(browserHistory, store);
 
 render((
   <Provider store={store}>
-    <App />
+    <Router history={history} routes={routes} />
   </Provider>
 ), document.getElementById('root'));
 registerServiceWorker();

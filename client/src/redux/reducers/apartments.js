@@ -2,13 +2,12 @@ import { APARTMENTS_REQUEST, APARTMENTS_SUCCESS, APARTMENTS_FAILURE } from '../c
 
 const defaultState = {
   loading: false,
-  loaded: false,
-  apartments: []
+  loaded: false
 };
 
-export default function(state = defaultState, action) {
-  const { apartments } = action;
-  switch (action.type) {
+export default function (state = defaultState, action) {
+  const { response, error, type } = action;
+  switch (type) {
     case APARTMENTS_REQUEST:
       return {
         ...state,
@@ -20,13 +19,14 @@ export default function(state = defaultState, action) {
         ...state,
         loading: false,
         loaded: true,
-        apartments
+        apartments: response
       };
     case APARTMENTS_FAILURE:
       return {
         ...state,
         loading: false,
-        loaded: false
+        loaded: false,
+        error
       };
     default:
       return state;
