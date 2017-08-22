@@ -1,4 +1,5 @@
 FROM starefossen/ruby-node
+ARG DANGEROUSLY_DISABLE_HOST_CHECK=true
 RUN apt-get update -qq && apt-get install -y build-essential libpq-dev
 RUN mkdir /Circular
 WORKDIR /Circular
